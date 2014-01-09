@@ -1,4 +1,4 @@
-#include "cut.h"
+#include "ccut.h"
 
 void your_suite() {
 
@@ -22,7 +22,7 @@ void your_suite() {
 }
 
 int main (int argc, char const *argv[]) {
-  cut_run_suite(your_suite);
-  cut_print_stats();
+  ccut_run_suite(your_suite);
+  ccut_print_stats();
   return 0;
 }

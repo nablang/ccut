@@ -1,5 +1,5 @@
 /**
-Copyright (c) 2013, http://github.com/luikore/cut
+Copyright (c) 2013, http://github.com/luikore/ccut
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -36,46 +36,46 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //// main specific
 
 
-void __cut_run_suite(void (*)());
-void __cut_print_stats();
+void __ccut_run_suite(void (*)());
+void __ccut_print_stats();
 
-#define cut_run_suite(__suite)\
+#define ccut_run_suite(__suite)\
   printf("\n\e[38;5;6m" #__suite "\e[38;5;7m");\
-  __cut_run_suite(__suite);
+  __ccut_run_suite(__suite);
 
-#define cut_print_stats\
-  __cut_print_stats
+#define ccut_print_stats\
+  __ccut_print_stats
 
 
 //// suite specific
 
 
-int __cut_dispatch(const char* c);
-void __cut_fail_before(int line);
-void __cut_fail_after();
-void __cut_pending(int line);
-void __cut_inc_assertion_size();
+int __ccut_dispatch(const char* c);
+void __ccut_fail_before(int line);
+void __ccut_fail_after();
+void __ccut_pending(int line);
+void __ccut_inc_assertion_size();
 
 #define test(c)\
-  if (__cut_dispatch(#c))
+  if (__ccut_dispatch(#c))
 
 #define pending\
-  __cut_pending(__LINE__);\
+  __ccut_pending(__LINE__);\
   return
 
 #define fail\
-  __cut_fail_before(__LINE__);\
+  __ccut_fail_before(__LINE__);\
   printf("Failure");\
-  __cut_fail_after();\
+  __ccut_fail_after();\
   return
 
 #define assert_true(expr, ...)\
   if (expr) {\
-    __cut_inc_assertion_size();\
+    __ccut_inc_assertion_size();\
   } else {\
-    __cut_fail_before(__LINE__);\
+    __ccut_fail_before(__LINE__);\
     printf(__VA_ARGS__);\
-    __cut_fail_after();\
+    __ccut_fail_after();\
     return;\
   }
 

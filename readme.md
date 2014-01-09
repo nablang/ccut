@@ -1,11 +1,11 @@
-cut = Clean C Unit Testing
+ccut = Clean C Unit Testing
 
 ## Example
 
 your_suite.c
 
 ```c
-#include "cut.h"
+#include "ccut.h"
 
 void your_suite() {
 
@@ -32,23 +32,23 @@ void your_suite() {
 test_runner.c
 
 ```c
-#include "cut.h"
+#include "ccut.h"
 
 void your_suite();
 int main (int argc, char const *argv[]) {
-  cut_run_suite(your_suite);
-  cut_print_stats();
+  ccut_run_suite(your_suite);
+  ccut_print_stats();
   return 0;
 }
 ```
 
-Add cut.h and cut.c and compile and run
+Add ccut.h and ccut.c and compile and run
 
 ```sh
-cc std=c11 your_suite.c test_runner.c cut.c && ./a.out
+cc std=c11 your_suite.c test_runner.c ccut.c && ./a.out
 ```
 
-![](https://raw.github.com/luikore/cut/master/screenshot.png)
+![](https://raw.github.com/luikore/ccut/master/screenshot.png)
 
 ## Sweet spots
 
@@ -78,8 +78,8 @@ Code outside the `test(...){ ... }` blocks will be executed n+1 times, where n i
 ## Usage
 
 - `test(test_name) { ... }` - define a test (must be put inside a void function)
-- `cut_run_suite(your_suite)` - run a test suite
-- `cut_print_stats()` - print test stats
+- `ccut_run_suite(your_suite)` - run a test suite
+- `ccut_print_stats()` - print test stats
 
 ## Assertions (todo)
 

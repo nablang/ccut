@@ -1,5 +1,5 @@
 /**
-Copyright (c) 2013, http://github.com/luikore/cut
+Copyright (c) 2013, http://github.com/luikore/ccut
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -28,7 +28,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-#include "cut.h"
+#include "ccut.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -52,7 +52,7 @@ static CUTContext ctx = {
   0, 0, 0, 0
 };
 
-void __cut_run_suite(void (*s)()) {
+void __ccut_run_suite(void (*s)()) {
   ctx.runned_tests_size = 0;
   ctx.runned_tests_cap = 8;
   ctx.runned_tests = malloc(sizeof(char*) * ctx.runned_tests_cap);
@@ -78,7 +78,7 @@ void __cut_run_suite(void (*s)()) {
   ctx.runned_tests = NULL;
 }
 
-void __cut_print_stats() {
+void __ccut_print_stats() {
   int all = ctx.success_size + ctx.failure_size + ctx.pending_size;
   printf("\n\n%d tests, %d success, %d failure, %d pending\n%d assertions passed\n",
     all, ctx.success_size, ctx.failure_size, ctx.pending_size, ctx.assertion_size
@@ -104,9 +104,9 @@ static int test_runned(const char* c) {
   return 0;
 }
 
-int __cut_dispatch(const char* c) {
+int __ccut_dispatch(const char* c) {
   if (!ctx.runned_tests) {
-    fprintf(stderr, "Please use cut_run_suite(suite_func) to run the tests");
+    fprintf(stderr, "Please use ccut_run_suite(suite_func) to run the tests");
     _Exit(1);
   }
 
@@ -137,23 +137,23 @@ int __cut_dispatch(const char* c) {
   return 0;
 }
 
-void __cut_pending(int line) {
+void __ccut_pending(int line) {
   printf("\e[38;5;3m%d: Pending\e[38;5;7m", line);
   ctx.pending_size++;
   ctx.current_state = 1;
 }
 
-void __cut_fail_before(int line) {
+void __ccut_fail_before(int line) {
   printf("\e[38;5;1m%d: ", line);
   ctx.failure_size++;
   ctx.current_state = 2;
 }
 
-void __cut_fail_after() {
+void __ccut_fail_after() {
   printf("\e[38;5;7m ");
 }
 
-void __cut_inc_assertion_size() {
+void __ccut_inc_assertion_size() {
   printf("\e[38;5;2m.\e[38;5;7m");
   ctx.assertion_size++;
 }

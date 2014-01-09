@@ -1,5 +1,5 @@
 /**
-Copyright (c) 2013, luikore
+Copyright (c) 2013, http://github.com/luikore/cut
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

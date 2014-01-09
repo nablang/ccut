@@ -48,7 +48,7 @@ Add cut.h and cut.c and compile and run
 cc std=c11 your_suite.c test_runner.c cut.c && ./a.out
 ```
 
-![](https://github.com/luikore/cut/blob/master/screenshot.png)
+![](https://raw.github.com/luikore/cut/master/screenshot.png)
 
 ## Sweet spots
 

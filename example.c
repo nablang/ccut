@@ -1,6 +1,6 @@
 #include "cut.h"
 
-void xxx_suite() {
+void your_suite() {
 
   test(foo1) {
     assert_true(2 == 2, "waze");
@@ -22,7 +22,7 @@ void xxx_suite() {
 }
 
 int main (int argc, char const *argv[]) {
-  cut_run_suite(xxx_suite);
+  cut_run_suite(your_suite);
   cut_print_stats();
   return 0;
 }

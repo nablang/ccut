@@ -32,6 +32,8 @@ void your_suite() {
 test_runner.c
 
 ```c
+#include "cut.h"
+
 void your_suite();
 int main (int argc, char const *argv[]) {
   cut_run_suite(your_suite);
@@ -43,7 +45,16 @@ int main (int argc, char const *argv[]) {
 Add cut.h and cut.c and compile and run
 
 ```sh
-cc std=c11 your_suite.c test_runner.c cut.c && ./a.out
+$ cc std=c11 your_suite.c test_runner.c cut.c && ./a.out
+
+your_suite
+  foo1 .Success
+  foo2 10: Expected 1, but got 2
+  bar 14: Pending
+  baz .19: Failure
+
+4 tests, 1 success, 2 failure, 1 pending
+2 assertions passed
 ```
 
 ## Sweet spots
@@ -56,7 +67,7 @@ assert_eq("foo", a);
 assert_neq((void*)"foo", (void*)a); // in case you want to compare pointers
 ```
 
-`assert_arr_eq` is for array content comparison. to compare 2 arrays:
+`assert_arr_eq` is for array content comparison. To compare 2 arrays:
 
 ```c
 assert_eq(arr1_size, arr2_size);

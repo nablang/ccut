@@ -45,17 +45,10 @@ int main (int argc, char const *argv[]) {
 Add cut.h and cut.c and compile and run
 
 ```sh
-$ cc std=c11 your_suite.c test_runner.c cut.c && ./a.out
-
-your_suite
-  foo1 .Success
-  foo2 10: Expected 1, but got 2
-  bar 14: Pending
-  baz .19: Failure
-
-4 tests, 1 success, 2 failure, 1 pending
-2 assertions passed
+cc std=c11 your_suite.c test_runner.c cut.c && ./a.out
 ```
+
+![](https://github.com/luikore/cut/blob/master/screenshot.png)
 
 ## Sweet spots
 

@@ -81,4 +81,4 @@ void __cut_inc_assertion_size();
 
 // todo many other types
 #define assert_eq(expected, actual)\
-  assert_true(expected == actual, "Expected %lld, but got %lld", expected, actual)
+  assert_true(expected == actual, "Expected %lld, but got %lld", (long long)expected, (long long)actual)

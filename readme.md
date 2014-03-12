@@ -42,7 +42,7 @@ int main (int argc, char const *argv[]) {
 }
 ```
 
-Add ccut.h and ccut.c and compile and run
+Add ccut.h and ccut.c, then compile and run
 
 ```sh
 cc std=c11 your_suite.c test_runner.c ccut.c && ./a.out
@@ -50,28 +50,11 @@ cc std=c11 your_suite.c test_runner.c ccut.c && ./a.out
 
 ![](https://raw.github.com/luikore/ccut/master/screenshot.png)
 
-## Sweet spots
-
-`assert_eq` is robust for nul-terminated string comparison
-
-```c
-char a[] = "foo";
-assert_eq("foo", a);
-assert_neq((void*)"foo", (void*)a); // in case you want to compare pointers
-```
-
-`assert_arr_eq` is for array content comparison. To compare 2 arrays:
-
-```c
-assert_eq(arr1_size, arr2_size);
-assert_arr_eq(arr1_size, arr1, arr2);
-```
-
 ## Caveats
 
 Require C11 for type generic macros.
 
-Every suite is a function of state machine, tests are run in the definition order (random order is a todo).
+Every suite is a function of state machine, tests are run in the definition order.
 
 Code outside the `test(...){ ... }` blocks will be executed n+1 times, where n is the number of tests (`before_each`/`after_each` are todos).
 
@@ -81,21 +64,23 @@ Code outside the `test(...){ ... }` blocks will be executed n+1 times, where n i
 - `ccut_run_suite(your_suite)` - run a test suite
 - `ccut_print_stats()` - print test stats
 
-## Assertions (todo)
+## Assertions
 
-- `assert_true(actual, message)` - if actual, then success, else show message
-- `assert_eq(expected, actual)` - it will use string comparison when given char* data
-- `assert_arr_eq(len, expected, actual)` - array compare with length
-- `assert_eps_eq(eps, expected, actual)` - floating point compare with eps
-- `assert_prec_eq(prec, expected, actual)` - precision based predicate
+- `assert_true(actual, message)` - if `actual`, then success, else show message and terminate current test
+- `assert_eq(expected, actual)` - assert equal for integers or pointers
+- `assert_str_eq(expected, actual)` - assert 2 nul-terminated strings are equal
+- `assert_ull_eq(expected, actual)` - assert equal for unsined integer data (NOTE that `assert_eq` may overflow given two large uint64 integers)
+- `assert_mem_eq(expected, actual, bytes_size)` - memory equality test
+- `assert_eps_eq(expected, actual, eps)` - assert 2 numbers differ no more than the absolute value of eps
 
-## Negative assertions (todo)
+## Negative assertions
 
-- `assert_false`
-- `assert_neq`
-- `assert_arr_neq`
-- `assert_eps_neq`
-- `assert_prec_neq`
+- `assert_false` - assert the expression to be considered false
+- `assert_neq` - assert not equal
+- `assert_str_neq` - assert 2 nul-terminated strings are not equal
+- `assert_ull_neq` - assert not equal for unsined integer data
+- `assert_mem_neq` - assert contents of 2 memory regions are not the same
+- `assert_eps_neq` - assert 2 numbers differ more than eps
 
 ## License
 

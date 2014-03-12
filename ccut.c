@@ -31,6 +31,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ccut.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <math.h>
 
 typedef struct {
   int runned_tests_cap;
@@ -52,7 +55,9 @@ static CUTContext ctx = {
   0, 0, 0, 0
 };
 
-void __ccut_run_suite(void (*s)()) {
+void __ccut_run_suite(const char* sname, void (*s)()) {
+  printf("\n\e[38;5;6m%s\e[38;5;7m", sname);
+
   ctx.runned_tests_size = 0;
   ctx.runned_tests_cap = 8;
   ctx.runned_tests = malloc(sizeof(char*) * ctx.runned_tests_cap);
@@ -137,23 +142,75 @@ int __ccut_dispatch(const char* c) {
   return 0;
 }
 
-void __ccut_pending(int line) {
+int __ccut_pending(int line) {
   printf("\e[38;5;3m%d: Pending\e[38;5;7m", line);
   ctx.pending_size++;
   ctx.current_state = 1;
+  return 1;
 }
 
-void __ccut_fail_before(int line) {
+static void fail_before(int line) {
   printf("\e[38;5;1m%d: ", line);
   ctx.failure_size++;
   ctx.current_state = 2;
 }
 
-void __ccut_fail_after() {
+static void fail_after() {
   printf("\e[38;5;7m ");
 }
 
-void __ccut_inc_assertion_size() {
+static void inc_assertion_size() {
   printf("\e[38;5;2m.\e[38;5;7m");
   ctx.assertion_size++;
+}
+
+int __ccut_fail(int line) {
+  fail_before(line);
+  printf("Failure");
+  fail_after();
+  return 1;
+}
+
+int __ccut_assert_true(int line, int expr, const char* fmt, ...) {
+  if (expr) {
+    inc_assertion_size();
+    return 0;
+  } else {
+    va_list args;
+    fail_before(line);
+    va_start(args, fmt);
+    vfprintf(stdout, fmt, args);
+    va_end(args);
+    fail_after();
+    return 1;
+  }
+}
+
+int __ccut_assert_ll_eq(int line, long long expected, long long actual) {
+  return __ccut_assert_true(line, expected == actual, "Expected %lld, but got %lld", expected, actual);
+}
+
+int __ccut_assert_ptr_eq(int line, void* expected, void* actual) {
+  return __ccut_assert_true(line, expected == actual, "Expected %p, but got %p", expected, actual);
+}
+
+int __ccut_assert_str_eq(int line, const char* expected, const char* actual) {
+  return __ccut_assert_true(line, strcmp(expected, actual) == 0,
+    "Expected %s (%lu), but got %s (%lu)", expected, strlen(expected), actual, strlen(actual));
+}
+
+int __ccut_assert_ull_eq(int line, unsigned long long expected, unsigned long long actual) {
+  return __ccut_assert_true(line, expected == actual, "Expected %llu, but got %llu", expected, actual);
+}
+
+int __ccut_assert_mem_eq(int line, void* expected, void* actual, size_t size) {
+  // todo: print some bytes?
+  return __ccut_assert_true(line, memcmp(expected, actual, size) == 0,
+    "Expected content of memory %p equals %p (%llu bytes)", actual, expected, size);
+}
+
+int __ccut_assert_eps_eq(int line, long double expected, long double actual, long double eps) {
+  eps = fabsl(eps);
+  return __ccut_assert_true(line, (actual < expected + eps) && (actual > expected - eps),
+    "Expected %llf (\xc2\xb1 %llf), but got %llf", expected, eps, actual);
 }

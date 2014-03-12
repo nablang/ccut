@@ -29,56 +29,58 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
 #pragma once
-
-#include <stdio.h>
-
+#include <stddef.h>
 
 //// main specific
 
-
-void __ccut_run_suite(void (*)());
-void __ccut_print_stats();
-
+void __ccut_run_suite(const char* sname, void (*s)());
 #define ccut_run_suite(__suite)\
-  printf("\n\e[38;5;6m" #__suite "\e[38;5;7m");\
-  __ccut_run_suite(__suite);
+  __ccut_run_suite(#__suite, __suite)
 
-#define ccut_print_stats\
-  __ccut_print_stats
-
+void __ccut_print_stats();
+#define ccut_print_stats()\
+  __ccut_print_stats()
 
 //// suite specific
 
-
 int __ccut_dispatch(const char* c);
-void __ccut_fail_before(int line);
-void __ccut_fail_after();
-void __ccut_pending(int line);
-void __ccut_inc_assertion_size();
-
 #define test(c)\
   if (__ccut_dispatch(#c))
 
+int __ccut_pending(int line);
 #define pending\
-  __ccut_pending(__LINE__);\
-  return
+  if (__ccut_pending(__LINE__)) return
 
+int __ccut_fail(int line);
 #define fail\
-  __ccut_fail_before(__LINE__);\
-  printf("Failure");\
-  __ccut_fail_after();\
-  return
+  if (__ccut_fail(__LINE__)) return
 
+// NOTE since we don't care the type of expr, we use !! to turn it into int
+int __ccut_assert_true(int line, int expr, const char* msg, ...);
 #define assert_true(expr, ...)\
-  if (expr) {\
-    __ccut_inc_assertion_size();\
-  } else {\
-    __ccut_fail_before(__LINE__);\
-    printf(__VA_ARGS__);\
-    __ccut_fail_after();\
-    return;\
-  }
+  if (__ccut_assert_true(__LINE__, !!(expr), __VA_ARGS__)) return
 
-// todo many other types
+#define assert_false(expr, ...)\
+  if (__ccut_assert_true(__LINE__, !(expr), __VA_ARGS__)) return
+
+// NOTE if we implement this macro with a call to assert_true, expressions could be calculated twice
+int __ccut_assert_ptr_eq(int line, void* expected, void* actual);
+int __ccut_assert_ll_eq(int line, long long expected, long long actual);
 #define assert_eq(expected, actual)\
-  assert_true(expected == actual, "Expected %lld, but got %lld", (long long)expected, (long long)actual)
+  if (_Generic((expected), void*: __ccut_assert_ptr_eq, default: __ccut_assert_ll_eq)(__LINE__, expected, actual)) return
+
+int __ccut_assert_str_eq(int line, const char* expected, const char* actual);
+#define assert_str_eq(expected, actual)\
+  if (__ccut_assert_str_eq(line, expected, actual)) return
+
+int __ccut_assert_ull_eq(int line, unsigned long long expected, unsigned long long actual);
+#define assert_ull_eq(expected, actual)\
+  if (__ccut_assert_ull_eq(__LINE__, expected, actual)) return
+
+int __ccut_assert_mem_eq(int line, void* expected, void* actual, size_t size);
+#define assert_mem_eq(expected, actual, size)\
+  if (__ccut_assert_arr_eq(__LINE__, expected, actual, size)) return
+
+int __ccut_assert_eps_eq(int line, long double expected, long double actual, long double eps);
+#define assert_eps_eq(expected, actual, eps)\
+  if (__ccut_assert_eps_eq(__LINE__, expected, actual, eps)) return

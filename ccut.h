@@ -69,18 +69,39 @@ int __ccut_assert_ll_eq(int line, long long expected, long long actual);
 #define assert_eq(expected, actual)\
   if (_Generic((expected), void*: __ccut_assert_ptr_eq, default: __ccut_assert_ll_eq)(__LINE__, expected, actual)) return
 
+int __ccut_assert_ptr_neq(int line, void* expected, void* actual);
+int __ccut_assert_ll_neq(int line, long long expected, long long actual);
+#define assert_neq(expected, actual)\
+  if (_Generic((expected), void*: __ccut_assert_ptr_neq, default: __ccut_assert_ll_neq)(__LINE__, expected, actual)) return
+
 int __ccut_assert_str_eq(int line, const char* expected, const char* actual);
 #define assert_str_eq(expected, actual)\
   if (__ccut_assert_str_eq(line, expected, actual)) return
+
+int __ccut_assert_str_neq(int line, const char* expected, const char* actual);
+#define assert_str_neq(expected, actual)\
+  if (__ccut_assert_str_neq(line, expected, actual)) return
 
 int __ccut_assert_ull_eq(int line, unsigned long long expected, unsigned long long actual);
 #define assert_ull_eq(expected, actual)\
   if (__ccut_assert_ull_eq(__LINE__, expected, actual)) return
 
+int __ccut_assert_ull_neq(int line, unsigned long long expected, unsigned long long actual);
+#define assert_ull_neq(expected, actual)\
+  if (__ccut_assert_ull_neq(__LINE__, expected, actual)) return
+
 int __ccut_assert_mem_eq(int line, void* expected, void* actual, size_t size);
 #define assert_mem_eq(expected, actual, size)\
-  if (__ccut_assert_arr_eq(__LINE__, expected, actual, size)) return
+  if (__ccut_assert_mem_eq(__LINE__, expected, actual, size)) return
+
+int __ccut_assert_mem_neq(int line, void* expected, void* actual, size_t size);
+#define assert_mem_neq(expected, actual, size)\
+  if (__ccut_assert_mem_neq(__LINE__, expected, actual, size)) return
 
 int __ccut_assert_eps_eq(int line, long double expected, long double actual, long double eps);
 #define assert_eps_eq(expected, actual, eps)\
   if (__ccut_assert_eps_eq(__LINE__, expected, actual, eps)) return
+
+int __ccut_assert_eps_neq(int line, long double expected, long double actual, long double eps);
+#define assert_eps_neq(expected, actual, eps)\
+  if (__ccut_assert_eps_neq(__LINE__, expected, actual, eps)) return

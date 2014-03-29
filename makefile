@@ -1,7 +1,18 @@
-libccut.a: ccut.c ccut.h
-	cc -std=c11 -c ccut.c
-	ar rcs libccut.a ccut.o
+PREFIX=/opt/local
 
-test: example.c ccut.c ccut.h
-	cc -std=c11 example.c -L. -lccut
+libccut.a: ccut.c include/ccut.h
+	cc -std=c11 -Iinclude -c ccut.c
+	ar rcs lib/libccut.a ccut.o
+
+test: example.c libccut.a
+	cc -std=c11 -Iinclude -Llib example.c -L. -lccut
 	./a.out
+
+clean:
+	rm -f *.o *.out lib/*.a
+
+install: libccut.a
+	sudo mkdir -p $(PREFIX)/include
+	sudo cp -pR include/*.h $(PREFIX)/include
+	sudo mkdir -p $(PREFIX)/lib
+	sudo cp -pR lib/*.a $(PREFIX)/lib

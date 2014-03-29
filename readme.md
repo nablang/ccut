@@ -1,14 +1,14 @@
 ccut = Clean C Unit Testing
 
-## Usage
+## Compiling
 
 After cloning the code
 
-    make
+    make install # install files in /opt/local
 
-Then add these to the cflags
+Then add these cflags for your tests
 
-    -std=c11 -Ipath-to-ccut -Lpath-to-ccut -lccut
+    -std=c11 -lccut
 
 ## Example
 

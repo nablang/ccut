@@ -1,5 +1,15 @@
 ccut = Clean C Unit Testing
 
+## Usage
+
+After cloning the code
+
+    make
+
+Then add these to the cflags
+
+    -std=c11 -Ipath-to-ccut -Lpath-to-ccut -lccut
+
 ## Example
 
 your_suite.c

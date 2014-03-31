@@ -4,8 +4,10 @@ libccut.a: ccut.c include/ccut.h
 	cc -std=c11 -Iinclude -c ccut.c
 	ar rcs lib/libccut.a ccut.o
 
-test: example.c libccut.a
-	cc -std=c11 -Iinclude -Llib example.c -L. -lccut
+test: test.c libccut.a
+	cc -std=c11 -Iinclude -Llib test.c -L. -lccut
+	./a.out
+	c++ -Iinclude -Llib test.c -L. -lccut
 	./a.out
 
 clean:

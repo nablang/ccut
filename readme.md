@@ -10,6 +10,10 @@ Then add these cflags for your tests
 
     -std=c11 -lccut
 
+If you are testing C++, just
+
+    -lccut
+
 ## Example
 
 your_suite.c

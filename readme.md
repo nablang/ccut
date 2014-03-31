@@ -74,6 +74,8 @@ Code outside the `test(...){ ... }` blocks will be executed n+1 times, where n i
 
 To compare pointers (data that failed assertions will be printed in hex format), you must hand-cast the pointer to `void*` first.
 
+The header `"ccut.h"` should be added lastly, because some common headers may also define a macro named `"test"`.
+
 ## Usage
 
 - `test(test_name) { ... }` - define a test (must be put inside a void function)

@@ -72,6 +72,8 @@ Every suite is a function of state machine, tests are run in the definition orde
 
 Code outside the `test(...){ ... }` blocks will be executed n+1 times, where n is the number of tests (`before_each`/`after_each` are todos).
 
+To compare pointers (data that failed assertions will be printed in hex format), you must hand-cast the pointer to `void*` first.
+
 ## Usage
 
 - `test(test_name) { ... }` - define a test (must be put inside a void function)

@@ -114,10 +114,10 @@ static bool __ccut_assert_neq(int line, long long expected, long long actual) {
 #endif
 
 #define assert_str_eq(expected, actual)\
-  if (__ccut_assert_str_eq(line, expected, actual)) return
+  if (__ccut_assert_str_eq(__LINE__, expected, actual)) return
 
 #define assert_str_neq(expected, actual)\
-  if (__ccut_assert_str_neq(line, expected, actual)) return
+  if (__ccut_assert_str_neq(__LINE__, expected, actual)) return
 
 #define assert_ull_eq(expected, actual)\
   if (__ccut_assert_ull_eq(__LINE__, expected, actual)) return

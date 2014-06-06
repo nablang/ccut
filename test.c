@@ -3,78 +3,78 @@
 
 void success_suite() {
 
-  test(assert_true) {
+  ccut_test(assert_true) {
     assert_true(2 == 2, "true");
     assert_true(3, "true");
   }
 
-  test(assert_false) {
+  ccut_test(assert_false) {
     assert_false(1 == 2, "false");
     assert_false(0, "false");
   }
 
-  test(assert_eq) {
+  ccut_test(assert_eq) {
     assert_eq(1, 1);
     int p;
     assert_eq((void*)&p, (void*)&p);
   }
 
-  test(assert_neq) {
+  ccut_test(assert_neq) {
     assert_neq(1, 2);
     int p, q;
     assert_neq((void*)&p, (void*)&q);
   }
 
-  test(assert_str_eq) {
+  ccut_test(assert_str_eq) {
     char p[] = "first string";
     char q[] = "first string";
     assert_str_eq(p, q);
     assert_neq((void*)p, (void*)q);
   }
 
-  test(assert_str_neq) {
+  ccut_test(assert_str_neq) {
     char p[] = "first string";
     char q[] = "first strang";
     assert_str_neq(p, q);
   }
 
-  test(assert_ull_eq) {
+  ccut_test(assert_ull_eq) {
     assert_ull_eq(1ULL << 62, 1ULL << 62);
   }
 
-  test(assert_ull_neq) {
+  ccut_test(assert_ull_neq) {
     assert_ull_neq((1ULL << 63) | 3, 3);
   }
 
-  test(assert_mem_eq) {
+  ccut_test(assert_mem_eq) {
     char p[] = "first string";
     char q[] = "first strang";
     assert_mem_eq(p, q, 9);
     assert_mem_eq((int*)p, (int*)q, 9);
   }
 
-  test(assert_mem_neq) {
+  ccut_test(assert_mem_neq) {
     char p[] = "first string";
     char q[] = "first strang";
     assert_mem_neq(p, q, 10);
   }
 
-  test(assert_eps_eq) {
+  ccut_test(assert_eps_eq) {
     assert_eps_eq(1.5, 1.501, 0.01);
   }
 
-  test(assert_eps_neq) {
+  ccut_test(assert_eps_neq) {
     assert_eps_neq(1.5, 1.51, 0.0001);
   }
 }
 
 void unsuccess_suite() {
 
-  test(fail) {
+  ccut_test(fail) {
     fail;
   }
 
-  test(pending) {
+  ccut_test(pending) {
     pending;
   }
 }

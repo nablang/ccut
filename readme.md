@@ -23,19 +23,19 @@ your_suite.c
 
 void your_suite() {
 
-  test(foo1) {
+  ccut_test(foo1) {
     assert_true(2 == 2, "waze");
   }
 
-  test(foo2) {
+  ccut_test(foo2) {
     assert_true(1 == 2, "no way");
   }
 
-  test(bar) {
+  ccut_test(bar) {
     pending;
   }
 
-  test(baz) {
+  ccut_test(baz) {
     assert_eq(1, 1);
     fail;
   }
@@ -70,7 +70,7 @@ Require C11 for type generic macros.
 
 Every suite is a function of state machine, tests are run in the definition order.
 
-Code outside the `test(...){ ... }` blocks will be executed n+1 times, where n is the number of tests (`before_each`/`after_each` are todos).
+Code outside the `ccut_test(...){ ... }` blocks will be executed n+1 times, where n is the number of tests (`before_each`/`after_each` are todos).
 
 To compare pointers (data that failed assertions will be printed in hex format), you must hand-cast the pointer to `void*` first.
 
@@ -78,7 +78,7 @@ The header `"ccut.h"` should be added lastly, because some common headers may al
 
 ## Usage
 
-- `test(test_name) { ... }` - define a test (must be put inside a void function)
+- `ccut_test(test_name) { ... }` - define a test (must be put inside a void function)
 - `ccut_run_suite(your_suite)` - run a test suite
 - `ccut_print_stats()` - print test stats
 

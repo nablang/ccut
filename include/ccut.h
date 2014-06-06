@@ -68,11 +68,11 @@ extern "C" {
 
 //// suite specific
 
-#ifdef test
-#undef test
+#ifdef ccut_test
+#undef ccut_test
 #endif
 
-#define test(c)\
+#define ccut_test(c)\
   if (__ccut_dispatch(#c))
 
 #ifdef pending

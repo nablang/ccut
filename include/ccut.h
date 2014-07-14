@@ -60,6 +60,8 @@ extern "C" {
 
 //// main specific
 
+void ccut_trap_asserts();
+
 #define ccut_run_suite(__suite)\
   __ccut_run_suite(#__suite, __suite)
 

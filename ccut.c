@@ -35,6 +35,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdarg.h>
 #include <math.h>
 
+// for assert trace, TODO
+// ref https://gist.github.com/jvranish/4441299 for windows support
+#ifndef _WIN32
+#include <execinfo.h>
+#include <signal.h>
+#include <unistd.h>
+#endif
+
 typedef struct {
   int runned_tests_cap;
   int runned_tests_size;
@@ -54,6 +62,29 @@ static CUTContext ctx = {
   NULL, 0,
   0, 0, 0, 0
 };
+
+#ifndef _WIN32
+static void assert_handler(int sig) {
+  void *array[10];
+  size_t size;
+
+  // get void*'s for all entries on the stack
+  size = backtrace(array, 10);
+
+  // print out all the frames to stderr
+  fprintf(stderr, "Error: signal %d:\n", sig);
+  backtrace_symbols_fd(array, size, STDERR_FILENO);
+  exit(1);
+}
+#endif
+
+void ccut_trap_asserts() {
+# ifndef _WIN32
+  signal(SIGABRT, assert_handler);
+# else
+  fprintf(stderr, "ccut_trap_asserts is only available on POSIX systems\n");
+# endif
+}
 
 void __ccut_run_suite(const char* sname, void (*s)()) {
   printf("\n\e[38;5;6m%s\e[38;5;7m", sname);

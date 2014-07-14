@@ -1,5 +1,6 @@
 #include "ccut.h"
 #include <stdio.h>
+#include <assert.h>
 
 void success_suite() {
 
@@ -79,6 +80,14 @@ void unsuccess_suite() {
   }
 }
 
+void assert_failure_func() {
+  assert(0);
+}
+
+void assert_failure_suite() {
+  assert_failure_func();
+}
+
 int main (int argc, char const *argv[]) {
   printf("\n\n===== the following tests should pass =====\n");
   ccut_run_suite(success_suite);
@@ -87,5 +96,10 @@ int main (int argc, char const *argv[]) {
   ccut_run_suite(unsuccess_suite);
 
   ccut_print_stats();
+
+  ccut_trap_asserts();
+  printf("\n\n===== the following tests should print stack trace of assert_failure_suite\n\n");
+  assert_failure_suite();
+
   return 0;
 }

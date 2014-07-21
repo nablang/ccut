@@ -225,11 +225,11 @@ int __ccut_assert_ll_neq(int line, long long expected, long long actual) {
   return __ccut_assert_true(line, expected != actual, "Expected not %lld", actual);
 }
 
-int __ccut_assert_ptr_eq(int line, void* expected, void* actual) {
+int __ccut_assert_ptr_eq(int line, const void* expected, const void* actual) {
   return __ccut_assert_true(line, expected == actual, "Expected %p, but got %p", expected, actual);
 }
 
-int __ccut_assert_ptr_neq(int line, void* expected, void* actual) {
+int __ccut_assert_ptr_neq(int line, const void* expected, const void* actual) {
   return __ccut_assert_true(line, expected != actual, "Expected not %p", actual);
 }
 
@@ -274,13 +274,13 @@ int __ccut_assert_ull_neq(int line, unsigned long long expected, unsigned long l
   return __ccut_assert_true(line, expected != actual, "Expected not %llu", expected);
 }
 
-int __ccut_assert_mem_eq(int line, void* expected, void* actual, size_t size) {
+int __ccut_assert_mem_eq(int line, const void* expected, const void* actual, size_t size) {
   // todo: print some bytes?
   return __ccut_assert_true(line, memcmp(expected, actual, size) == 0,
     "Expected content of memory %p equals %p (%llu bytes)", actual, expected, size);
 }
 
-int __ccut_assert_mem_neq(int line, void* expected, void* actual, size_t size) {
+int __ccut_assert_mem_neq(int line, const void* expected, const void* actual, size_t size) {
   // todo: print some bytes?
   return __ccut_assert_true(line, memcmp(expected, actual, size) != 0,
     "Expected content of memory %p not equals %p (%llu bytes)", actual, expected, size);

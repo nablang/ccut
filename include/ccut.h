@@ -41,16 +41,16 @@ extern "C" {
   int __ccut_pending(int line);
   int __ccut_fail(int line);
   int __ccut_assert_true(int line, int expr, const char* msg, ...);
-  int __ccut_assert_ptr_eq(int line, void* expected, void* actual);
+  int __ccut_assert_ptr_eq(int line, const void* expected, const void* actual);
   int __ccut_assert_ll_eq(int line, long long expected, long long actual);
-  int __ccut_assert_ptr_neq(int line, void* expected, void* actual);
+  int __ccut_assert_ptr_neq(int line, const void* expected, const void* actual);
   int __ccut_assert_ll_neq(int line, long long expected, long long actual);
   int __ccut_assert_str_eq(int line, const char* expected, const char* actual);
   int __ccut_assert_str_neq(int line, const char* expected, const char* actual);
   int __ccut_assert_ull_eq(int line, unsigned long long expected, unsigned long long actual);
   int __ccut_assert_ull_neq(int line, unsigned long long expected, unsigned long long actual);
-  int __ccut_assert_mem_eq(int line, void* expected, void* actual, size_t size);
-  int __ccut_assert_mem_neq(int line, void* expected, void* actual, size_t size);
+  int __ccut_assert_mem_eq(int line, const void* expected, const void* actual, size_t size);
+  int __ccut_assert_mem_neq(int line, const void* expected, const void* actual, size_t size);
   int __ccut_assert_eps_eq(int line, long double expected, long double actual, long double eps);
   int __ccut_assert_eps_neq(int line, long double expected, long double actual, long double eps);
 

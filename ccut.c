@@ -102,6 +102,7 @@ void __ccut_run_suite(const char* sname, void (*s)()) {
       // last success
       if (ctx.runned_tests_size && !ctx.current_state) {
         printf("\e[38;5;2mSuccess\e[38;5;7m");
+        fflush(stdout);
         ctx.success_size++;
       }
       break;
@@ -160,6 +161,7 @@ int __ccut_dispatch(const char* c) {
   if (strcmp(ctx.current_name, c)) {
     if (!ctx.current_state) {
       printf("\e[38;5;2mSuccess\e[38;5;7m");
+      fflush(stdout);
       ctx.success_size++;
     }
     add_runned_test(c);
@@ -175,6 +177,7 @@ int __ccut_dispatch(const char* c) {
 
 int __ccut_pending(int line) {
   printf("\e[38;5;3m%d: Pending\e[38;5;7m", line);
+  fflush(stdout);
   ctx.pending_size++;
   ctx.current_state = 1;
   return 1;
@@ -192,6 +195,7 @@ static void fail_after() {
 
 static void inc_assertion_size() {
   printf("\e[38;5;2m.\e[38;5;7m");
+  fflush(stdout);
   ctx.assertion_size++;
 }
 
@@ -199,6 +203,7 @@ int __ccut_fail(int line) {
   fail_before(line);
   printf("Failure");
   fail_after();
+  fflush(stdout);
   return 1;
 }
 

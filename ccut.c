@@ -64,25 +64,25 @@ static CUTContext ctx = {
 };
 
 #ifndef _WIN32
-static void assert_handler(int sig) {
-  void *array[10];
+static void print_trace_handler(int sig) {
+  void *array[20];
   size_t size;
 
   // get void*'s for all entries on the stack
-  size = backtrace(array, 10);
+  size = backtrace(array, 20);
 
   // print out all the frames to stderr
   fprintf(stderr, "Error: signal %d:\n", sig);
   backtrace_symbols_fd(array, size, STDERR_FILENO);
-  exit(1);
+  _Exit(1);
 }
 #endif
 
-void ccut_trap_asserts() {
+void ccut_print_trace_on(int sig) {
 # ifndef _WIN32
-  signal(SIGABRT, assert_handler);
+  signal(sig, print_trace_handler);
 # else
-  fprintf(stderr, "ccut_trap_asserts is only available on POSIX systems\n");
+  fprintf(stderr, "ccut_trap_on is only available on POSIX systems\n");
 # endif
 }
 

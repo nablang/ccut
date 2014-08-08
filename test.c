@@ -97,7 +97,7 @@ int main (int argc, char const *argv[]) {
 
   ccut_print_stats();
 
-  ccut_trap_asserts();
+  ccut_print_trace_on(SIGABRT);
   printf("\n\n===== the following tests should print stack trace of assert_failure_suite\n\n");
   assert_failure_suite();
 

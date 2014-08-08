@@ -5,13 +5,13 @@ libccut.a: ccut.c include/ccut.h
 	ar rcs lib/libccut.a ccut.o
 
 test: test.c libccut.a
-	cc -std=c11 -Iinclude -Llib test.c -L. -lccut
+	cc -std=c11 -Iinclude -Llib -g -rdynamic test.c -L. -lccut
 	./a.out
-	c++ -Iinclude -Llib test.c -L. -lccut
+	c++ -Iinclude -Llib -g -rdynamic test.c -L. -lccut
 	./a.out
 
 clean:
-	rm -f *.o *.out lib/*.a
+	rm -rf *.o *.out lib/*.a *.dSYM
 
 install: libccut.a
 	sudo mkdir -p $(PREFIX)/include

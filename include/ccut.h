@@ -60,7 +60,8 @@ extern "C" {
 
 //// main specific
 
-void ccut_trap_asserts();
+#include <signal.h>
+void ccut_print_trace_on(int sig);
 
 #define ccut_run_suite(__suite)\
   __ccut_run_suite(#__suite, __suite)

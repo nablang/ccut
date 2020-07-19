@@ -1,5 +1,5 @@
 /**
-Copyright (c) 2013, 2014, http://github.com/luikore/ccut
+Copyright (c) 2013-2020, http://github.com/luikore/ccut
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -41,18 +41,10 @@ extern "C" {
   int __ccut_pending(int line);
   int __ccut_fail(int line);
   int __ccut_assert_true(int line, int expr, const char* msg, ...);
-  int __ccut_assert_ptr_eq(int line, const void* expected, const void* actual);
   int __ccut_assert_ll_eq(int line, long long expected, long long actual);
-  int __ccut_assert_ptr_neq(int line, const void* expected, const void* actual);
   int __ccut_assert_ll_neq(int line, long long expected, long long actual);
-  int __ccut_assert_str_eq(int line, const char* expected, const char* actual);
-  int __ccut_assert_str_neq(int line, const char* expected, const char* actual);
-  int __ccut_assert_ull_eq(int line, unsigned long long expected, unsigned long long actual);
-  int __ccut_assert_ull_neq(int line, unsigned long long expected, unsigned long long actual);
-  int __ccut_assert_mem_eq(int line, const void* expected, const void* actual, size_t size);
-  int __ccut_assert_mem_neq(int line, const void* expected, const void* actual, size_t size);
-  int __ccut_assert_eps_eq(int line, long double expected, long double actual, long double eps);
-  int __ccut_assert_eps_neq(int line, long double expected, long double actual, long double eps);
+  int __ccut_assert_truef(int line, int predicate, void* expected, void* actual, void inspectf(void*));
+  int __ccut_assert_falsef(int line, int predicate, void* expected, void* actual, void inspectf(void*));
 
 #ifdef __cplusplus
 }
@@ -99,55 +91,22 @@ void ccut_print_trace_on(int sig);
 #define assert_false(expr, ...)\
   if (__ccut_assert_true(__LINE__, !(expr), __VA_ARGS__)) return
 
-// NOTE if we implement this macro with a call to assert_true, expressions could be calculated twice
-#ifdef __cplusplus
-static bool __ccut_assert_eq(int line, void* expected, void* actual) {
-  return __ccut_assert_ptr_eq(line, expected, actual);
-}
-static bool __ccut_assert_eq(int line, long long expected, long long actual) {
-  return __ccut_assert_ll_eq(line, expected, actual);
-}
 #define assert_eq(expected, actual)\
-  if (__ccut_assert_eq(__LINE__, expected, actual)) return
-#else
-#define assert_eq(expected, actual)\
-  if (_Generic((expected), void*: __ccut_assert_ptr_eq, default: __ccut_assert_ll_eq)(__LINE__, expected, actual)) return
-#endif
+  if (__ccut_assert_ll_eq(__LINE__, (long long)(expected), (long long)(actual))) return
 
-#ifdef __cplusplus
-static bool __ccut_assert_neq(int line, void* expected, void* actual) {
-  return __ccut_assert_ptr_neq(line, expected, actual);
-}
-static bool __ccut_assert_neq(int line, long long expected, long long actual) {
-  return __ccut_assert_ll_neq(line, expected, actual);
-}
 #define assert_neq(expected, actual)\
-  if (__ccut_assert_neq(__LINE__, expected, actual)) return
-#else
-#define assert_neq(expected, actual)\
-  if (_Generic((expected), void*: __ccut_assert_ptr_neq, default: __ccut_assert_ll_neq)(__LINE__, expected, actual)) return
-#endif
+  if (__ccut_assert_ll_neq(__LINE__, (long long)(expected), (long long)(actual))) return
 
-#define assert_str_eq(expected, actual)\
-  if (__ccut_assert_str_eq(__LINE__, expected, actual)) return
+// Can we use __typeof__(expected) __ccut_expected ?
+// Not good, array types like __typeof__(char[]) will be broken.
+#define assert_eqf(expected, actual, eq_fn, inspect_fn) do { \
+  void* __ccut_expected = (void*)(expected); \
+  void* __ccut_actual = (void*)(actual); \
+  if (__ccut_assert_truef(__LINE__, eq_fn(__ccut_expected, __ccut_actual), (void*)__ccut_expected, (void*)__ccut_actual, inspect_fn)) return; \
+} while(0)
 
-#define assert_str_neq(expected, actual)\
-  if (__ccut_assert_str_neq(__LINE__, expected, actual)) return
-
-#define assert_ull_eq(expected, actual)\
-  if (__ccut_assert_ull_eq(__LINE__, expected, actual)) return
-
-#define assert_ull_neq(expected, actual)\
-  if (__ccut_assert_ull_neq(__LINE__, expected, actual)) return
-
-#define assert_mem_eq(expected, actual, size)\
-  if (__ccut_assert_mem_eq(__LINE__, expected, actual, size)) return
-
-#define assert_mem_neq(expected, actual, size)\
-  if (__ccut_assert_mem_neq(__LINE__, expected, actual, size)) return
-
-#define assert_eps_eq(expected, actual, eps)\
-  if (__ccut_assert_eps_eq(__LINE__, expected, actual, eps)) return
-
-#define assert_eps_neq(expected, actual, eps)\
-  if (__ccut_assert_eps_neq(__LINE__, expected, actual, eps)) return
+#define assert_neqf(expected, actual, eq_fn, inspect_fn) do { \
+  void* __ccut_expected = (void*)(expected); \
+  void* __ccut_actual = (void*)(actual); \
+  if (__ccut_assert_falsef(__LINE__, eq_fn(__ccut_expected, __ccut_actual), (void*)__ccut_expected, (void*)__ccut_actual, inspect_fn)) return; \
+} while(0)

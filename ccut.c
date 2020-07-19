@@ -1,5 +1,5 @@
 /**
-Copyright (c) 2013, 2014, http://github.com/luikore/ccut
+Copyright (c) 2013-2020, http://github.com/luikore/ccut
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -230,75 +230,32 @@ int __ccut_assert_ll_neq(int line, long long expected, long long actual) {
   return __ccut_assert_true(line, expected != actual, "Expected not %lld", actual);
 }
 
-int __ccut_assert_ptr_eq(int line, const void* expected, const void* actual) {
-  return __ccut_assert_true(line, expected == actual, "Expected %p, but got %p", expected, actual);
-}
-
-int __ccut_assert_ptr_neq(int line, const void* expected, const void* actual) {
-  return __ccut_assert_true(line, expected != actual, "Expected not %p", actual);
-}
-
-int __ccut_assert_str_eq(int line, const char* expected, const char* actual) {
-  if (!expected && !actual) {
+int __ccut_assert_truef(int line, int predicate, void* expected, void* actual, void inspectf(void*)) {
+  if (predicate) {
+    inc_assertion_size();
     return 0;
-  } else if (expected && !actual) {
+  } else {
     fail_before(line);
-    printf("Expected string %s, but got NULL", expected);
-    fail_after();
-    return 1;
-  } else if (!expected && actual) {
-    fail_before(line);
-    printf("Expected NULL, but got string %s", actual);
+    printf("Expect ");
+    inspectf(expected);
+    printf(" == ");
+    inspectf(actual);
+    printf("\n");
     fail_after();
     return 1;
   }
-  return __ccut_assert_true(line, strcmp(expected, actual) == 0,
-    "Expected string %s (%lu), but got %s (%lu)", expected, strlen(expected), actual, strlen(actual));
 }
 
-int __ccut_assert_str_neq(int line, const char* expected, const char* actual) {
-  if (!expected && !actual) {
+int __ccut_assert_falsef(int line, int predicate, void* expected, void* actual, void inspectf(void*)) {
+  if (!predicate) {
+    inc_assertion_size();
+    return 0;
+  } else {
     fail_before(line);
-    printf("Expected string to be not NULL");
+    printf("Expect not ");
+    inspectf(actual);
+    printf("\n");
     fail_after();
     return 1;
-  } else if (expected && !actual) {
-    return 0;
-  } else if (!expected && actual) {
-    return 0;
   }
-  return __ccut_assert_true(line, strcmp(expected, actual) != 0,
-    "Expected string not equals to %s (%lu)", expected, strlen(expected));
-}
-
-int __ccut_assert_ull_eq(int line, unsigned long long expected, unsigned long long actual) {
-  return __ccut_assert_true(line, expected == actual, "Expected %llu, but got %llu", expected, actual);
-}
-
-int __ccut_assert_ull_neq(int line, unsigned long long expected, unsigned long long actual) {
-  return __ccut_assert_true(line, expected != actual, "Expected not %llu", expected);
-}
-
-int __ccut_assert_mem_eq(int line, const void* expected, const void* actual, size_t size) {
-  // todo: print some bytes?
-  return __ccut_assert_true(line, memcmp(expected, actual, size) == 0,
-    "Expected content of memory %p equals %p (%llu bytes)", actual, expected, size);
-}
-
-int __ccut_assert_mem_neq(int line, const void* expected, const void* actual, size_t size) {
-  // todo: print some bytes?
-  return __ccut_assert_true(line, memcmp(expected, actual, size) != 0,
-    "Expected content of memory %p not equals %p (%llu bytes)", actual, expected, size);
-}
-
-int __ccut_assert_eps_eq(int line, long double expected, long double actual, long double eps) {
-  eps = fabsl(eps);
-  return __ccut_assert_true(line, (actual < expected + eps) && (actual > expected - eps),
-    "Expected %llf (\xc2\xb1 %llf), but got %llf", expected, eps, actual);
-}
-
-int __ccut_assert_eps_neq(int line, long double expected, long double actual, long double eps) {
-  eps = fabsl(eps);
-  return __ccut_assert_true(line, (actual >= expected + eps) || (actual <= expected - eps),
-    "Expected not the same as %llf (\xc2\xb1 %llf), but got %llf within", expected, eps, actual);
 }

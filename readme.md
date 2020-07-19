@@ -21,23 +21,39 @@ your_suite.c
 ```c
 #include "ccut.h"
 
+// your custom eq function, must use void* for arg types
+int str_eq(void* a, void* b) {
+  return strcmp(a, b) == 0;
+}
+
+// your custom inspect function, the type must be `void (*func)(void*)`
+void str_inspect(void* a) {
+  fprintf(stderr, "%s", a);
+}
+
+// a macro for convenience
+#define assert_str_eq(expected, actual) asser_eqf(expected, actual, str_eq, str_inspect)
+
 void your_suite() {
 
   ccut_test(foo1) {
-    assert_true(2 == 2, "waze");
+    assert_true(2 == 2, "wat?");
   }
 
   ccut_test(foo2) {
-    assert_true(1 == 2, "no way");
+    assert_false(1 == 2, "no way!");
   }
 
   ccut_test(bar) {
     pending;
   }
 
-  ccut_test(baz) {
-    assert_eq(1, 1);
-    fail;
+  ccut_test(simple equal) {
+    assert_eq(expected, actual);
+  }
+
+  ccut_test(custom equal) {
+    assert_str_eq(expected, actual);
   }
 
 }
@@ -66,8 +82,6 @@ cc std=c11 your_suite.c test_runner.c ccut.c && ./a.out
 
 ## Caveats
 
-Require C11 for type generic macros.
-
 Every suite is a function of state machine, tests are run in the definition order.
 
 Code outside the `ccut_test(...){ ... }` blocks will be executed n+1 times, where n is the number of tests (`before_each`/`after_each` are todos).
@@ -86,19 +100,11 @@ The header `"ccut.h"` should be added lastly, because some common headers may al
 
 - `assert_true(actual, message)` - if `actual`, then success, else show message and terminate current test
 - `assert_eq(expected, actual)` - assert equal for integers or pointers
-- `assert_str_eq(expected, actual)` - assert 2 nul-terminated strings are equal
-- `assert_ull_eq(expected, actual)` - assert equal for unsined integer data (NOTE that `assert_eq` may overflow given two large uint64 integers)
-- `assert_mem_eq(expected, actual, bytes_size)` - memory equality test
-- `assert_eps_eq(expected, actual, eps)` - assert 2 numbers differ no more than the absolute value of eps
 
 ## Negative assertions
 
 - `assert_false` - assert the expression to be considered false
 - `assert_neq` - assert not equal
-- `assert_str_neq` - assert 2 nul-terminated strings are not equal
-- `assert_ull_neq` - assert not equal for unsined integer data
-- `assert_mem_neq` - assert contents of 2 memory regions are not the same
-- `assert_eps_neq` - assert 2 numbers differ more than eps
 
 ## Utilities
 
